@@ -1,5 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router';
+import { connect } from 'react-redux';
+import * as courseActions from '../../actions/courseActions';
 
 class CoursesPage extends React.Component {
     constructor (props, context) {
@@ -20,13 +22,18 @@ class CoursesPage extends React.Component {
     }
 
     onClick () {
-        alert(`Saving ${this.state.course.title}`);
+        this.props.dispatch(courseActions.createCourse(this.state.course));
+    }
+
+    courseRow (course, index) {
+        return <section key={index}>{course.title}</section>;
     }
 
     render () {
         return (
             <section>
                 <h1>Courses</h1>
+                {this.props.courses.map(this.courseRow)}
                 <input
                     name="course"
                     type="text"
@@ -42,4 +49,10 @@ class CoursesPage extends React.Component {
     }
 }
 
-export default CoursesPage;
+function mapStateToProps (state, ownProps) {
+    return {
+        courses: state.courses
+    };
+}
+
+export default connect(mapStateToProps)(CoursesPage);
