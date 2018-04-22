@@ -1,9 +1,9 @@
-export default function courseReducer(state = [], action) {
+import initState from './initState';
+
+export default function courseReducer(state = initState.courses, action) {
     switch(action.type) {
-        case 'CREATE_COURSE':
-            return [...state,
-                Object.assign({}, action.course)
-            ];
+        case 'LOAD_COURSES_SUCCESS':
+            return action.courses;
         default:
             return state;
     }
