@@ -14,6 +14,25 @@ export function loadCourses () {
     };
 }
 
+export function saveCourseSuccess (savedCourse) {
+    return { type: 'SAVE_COURSE_SUCCESS', savedCourse };
+}
+
+export function updateCourseSuccess (savedCourse) {
+    return { type: 'UPDATE_COURSE_SUCCESS', savedCourse };
+}
+
+export function saveCourse (course) {
+    return function (dispatch, getState) {
+        return courseApi.saveCourse(course).then(savedCourses => {
+            course.id ? dispatch(updateCourseSuccess(savedCourses)) :
+            dispatch(saveCourseSuccess(savedCourses));
+        }).catch(err => {
+            throw(err);
+        });
+    };
+}
+
 /*
 Make a aysnc call
 Using a promise
