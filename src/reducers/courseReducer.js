@@ -5,7 +5,7 @@ export default function courseReducer(state = initState.courses, action) {
         case 'LOAD_COURSES_SUCCESS':
             return action.courses;
         case 'SAVE_COURSE_SUCCESS':
-            return [...state, Object.assign({}, action.course)];
+            return [...state, Object.assign({}, action.savedCourse)];
         case 'UPDATE_COURSE_SUCCESS': {
             let foo = [...state.filter(course => course.id !== action.savedCourse.id),
                 Object.assign({}, action.savedCourse)];

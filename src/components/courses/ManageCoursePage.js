@@ -14,15 +14,28 @@ class ManageCoursePage extends React.Component {
 
         this.state = {
             course: Object.assign({}, props.course),
-            errors: {}
+            errors: {},
+            saving: false
         };
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (this.props.course.id !== nextProps.course.id) {
+            this.setState({ course: Object.assign({}, nextProps.course)});
+        }
     }
 
     saveCourse(e) {
         e.preventDefault();
-        //Get data and pass it to the actions.
-        //Trigger action.
-        this.props.actions.saveCourse(this.state.course);
+        this.setState({saving: true});
+        this.props.actions.saveCourse(this.state.course)
+            .then(() => {
+                this.setState({saving: false});
+                this.context.router.push('/courses');
+            })
+            .catch(() => {
+                this.setState({saving: false});
+            });
     }
 
     updateCourseState(e) {
@@ -38,6 +51,7 @@ class ManageCoursePage extends React.Component {
                 allAuthors={this.props.authors}
                 course={this.state.course}
                 errors={this.state.errors}
+                saving={this.state.saving}
                 onChange={this.updateCourseState}
                 onSave={this.saveCourse} />
         );
@@ -49,6 +63,10 @@ ManageCoursePage.propTypes = {
     errors: PropTypes.object.isRequired,
     authors: PropTypes.array.isRequired,
     actions: PropTypes.object.isRequired
+};
+
+ManageCoursePage.contextTypes = {
+    router: PropTypes.object
 };
 
 function mapStateToProps (state, ownProps) {
@@ -76,17 +94,17 @@ function handleCourseData (state, ownProps) {
     let existingCourse = ownProps.params.id;
 
     if (existingCourse) {
-        return state.courses.find(course => course.id == ownProps.params.id);
-    } else {
-        return course = {
-            id: '',
-            title: '',
-            watchHref: '',
-            authorId: '',
-            length: '',
-            category: ''
-        };
+        return state.courses.find(course => course.id == ownProps.params.id) || [];
     }
+
+    return course = {
+        id: '',
+        title: '',
+        watchHref: '',
+        authorId: '',
+        length: '',
+        category: ''
+    };
 }
 
 function mapDispatchToProps(dispatch) {
