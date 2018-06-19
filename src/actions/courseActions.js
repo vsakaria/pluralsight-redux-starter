@@ -28,7 +28,7 @@ export function updateCourseSuccess(savedCourse) {
 }
 
 export function saveCourse(course) {
-  return function(dispatch, getState) {
+  return function(dispatch) {
     dispatch(ajaxCalled());
     return courseApi
       .saveCourse(course)
